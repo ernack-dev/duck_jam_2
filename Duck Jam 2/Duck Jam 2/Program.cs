@@ -7,7 +7,7 @@ namespace Duck_Jam_2
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new Neptunia())
                 game.Run();
         }
     }
