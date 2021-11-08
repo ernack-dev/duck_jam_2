@@ -21,6 +21,7 @@ namespace Duck_Jam_2
         public Neptunia()
         {
             _graphics = new GraphicsDeviceManager(this);
+            
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Assets.Init();
@@ -28,6 +29,10 @@ namespace Duck_Jam_2
 
         protected override void Initialize()
         {
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.ApplyChanges();
+
             base.Initialize();
             Screen.device = GraphicsDevice;
             this.events = new NeptuniaEvent();

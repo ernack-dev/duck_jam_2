@@ -8,7 +8,9 @@ namespace Duck_Jam_2
         static void Main()
         {
             using (var game = new Neptunia())
+                
                 game.Run();
+
         }
     }
 }
