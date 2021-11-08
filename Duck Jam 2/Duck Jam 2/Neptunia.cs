@@ -29,27 +29,29 @@ namespace Duck_Jam_2
         protected override void Initialize()
         {
             base.Initialize();
-            
+            Screen.device = GraphicsDevice;
             this.events = new NeptuniaEvent();
             this.current_scene = new GameScene(this.events);
             this.events.AddObserver(this.current_scene);
-
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            ArrayList contents = new ArrayList()
+            ArrayList textures = new ArrayList()
             {
                 "unit",
                 "ore",
-                "food"
+                "food",
+                "home"
             };
 
-            foreach (string name in contents)
+            foreach (string name in textures)
             {
                 Assets.Add(name, Content.Load<Texture2D>(name));
             }
+
+            Assets.Add("main_font", Content.Load<SpriteFont>("main_font"));
         }
 
         protected override void Update(GameTime gameTime)
@@ -57,6 +59,7 @@ namespace Duck_Jam_2
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            
             GameInputs.mouse_x = Mouse.GetState().X;
             GameInputs.mouse_y = Mouse.GetState().Y; 
 
@@ -80,6 +83,7 @@ namespace Duck_Jam_2
                 GameInputs.right_mouse_released = true;
             }
 
+            Screen.camera.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             this.current_scene.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             base.Update(gameTime);
         }
@@ -87,7 +91,7 @@ namespace Duck_Jam_2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+           
             _spriteBatch.Begin();
 
              this.current_scene.Display(_spriteBatch);

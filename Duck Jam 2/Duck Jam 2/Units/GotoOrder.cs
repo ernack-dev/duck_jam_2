@@ -35,7 +35,6 @@ namespace Duck_Jam_2
 				this.is_done = true;
 				return;
 			}
-
 			
 			this.transport.Move(arrive + avoid * 0.8f);
 			

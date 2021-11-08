@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Duck_Jam_2
 {
-	public class Food : Entity
+	public class Ore : Entity
 	{
-		public Food(Vector2 position) : base(EntityType.Resource, "food", position)
+		public Ore(Vector2 position): base(EntityType.Resource, "ore", position)
 		{
-
+			this.name = "Ore";
 		}
 	}
 }

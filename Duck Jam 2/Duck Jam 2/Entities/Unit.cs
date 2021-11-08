@@ -13,6 +13,8 @@ namespace Duck_Jam_2
         private ArrayList orders;
         public ArrayList entities { get; }
 
+        private static int Counter = 0;
+
         public Unit(Vector2 position, ArrayList entities): base(EntityType.Unit, "unit", position)
         {
             this.entities = entities;
@@ -21,6 +23,8 @@ namespace Duck_Jam_2
       
             this.transport = new UnitTransportLayer(this);
             this.steering = new UnitSteeringLayer(this);
+            this.name = "Unit_" + Unit.Counter.ToString();
+            Unit.Counter++;
         }
 
 
@@ -30,16 +34,10 @@ namespace Duck_Jam_2
             if (my_event.type == EventType.RightMouseButton && this.is_selected)
             {
                 this.orders.Clear();
-                this.orders.Add(new GotoOrder(this, new Vector2(GameInputs.mouse_x, GameInputs.mouse_y)));
+                this.orders.Add(new GotoOrder(this, GameInputs.camera_mouse_pos()));
             }
         }
-       
-        public bool IsAtPosition(Vector2 position)
-        {
-            return position.X >= this.position.X && position.X <= this.position.X + this.texture.Width &&
-                position.Y >= this.position.Y && position.Y <= this.position.Y + this.texture.Height;
-        }
-
+        
         public override void Update(float dt)
         {
             if (this.orders.Count == 0)
@@ -55,15 +53,9 @@ namespace Duck_Jam_2
                 if (order.IsDone())
                 {
                     this.orders.RemoveAt(0);
-
-                   
                 }
             }
         }
 
-        public override void Display(SpriteBatch batch)
-        {
-            batch.Draw(this.texture, this.position, Color.White);
-        }
     }
 }
