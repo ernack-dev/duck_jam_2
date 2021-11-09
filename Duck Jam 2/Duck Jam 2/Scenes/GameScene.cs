@@ -26,20 +26,50 @@ namespace Duck_Jam_2
             this.navbar.is_fixed = true;
             this.body.is_fixed = true;
             this.footer.is_fixed = true;
-           
 
-            this.entities.Add(new Unit(new Vector2(32, 32), entities));
-            this.entities.Add(new Unit(new Vector2(320, 32), entities));
-            this.entities.Add(new Unit(new Vector2(32, 320), entities));
+            Screen.camera.SetCenter(new Vector2(32, 32));
+            this.entities.Add(new Unit(UnitTeam.Player, new Vector2(0, 32), entities));
+            this.entities.Add(new Unit(UnitTeam.Player, new Vector2(32, 32), entities));
+            this.entities.Add(new Unit(UnitTeam.Player, new Vector2(64, 32), entities));
+
+            Random rand = new Random();
+
+            // Spawn opponents
+            for (int i=0; i<12; i++)
+            {
+                int x = rand.Next(-1800, 1800);
+
+                int y = rand.Next(-1800, 1800);
+                Unit opponent = new Unit(UnitTeam.Opponent, new Vector2(x, y), entities);
+                opponent.AddOrder(new WanderOrder(opponent));
+                this.entities.Add(opponent);
+            }
+
+            // Spawn neutrals
+            for (int i = 0; i < 64; i++)
+            {
+                int x = rand.Next(-1800, 1800);
+
+                int y = rand.Next(-1800, 1800);
+                Unit neutral = new Unit(UnitTeam.Neutral, new Vector2(x, y), entities);
+                neutral.AddOrder(new WanderOrder(neutral));
+                this.entities.Add(neutral);
+            }
+
+            // Spawn targets
+            for (int i = 0; i < 1; i++)
+            {
+                int x = rand.Next(-1800, 1800);
+                int y = rand.Next(-1800, 1800);
+                Unit target = new Unit(UnitTeam.Target, new Vector2(x, y), entities);
+                target.AddOrder(new WanderOrder(target));
+                this.entities.Add(target);
+            }
 
             foreach (Unit unit in this.entities)
             {
                 this.units.Add(unit);
             }
-
-            this.entities.Add(new HomeBuilding(new Vector2(64, 64)));
-            this.entities.Add(new Ore(new Vector2(128, 128)));
-            this.entities.Add(new Food(new Vector2(256, 400)));
 
             foreach (Unit unit in this.units)
             {
@@ -57,19 +87,25 @@ namespace Duck_Jam_2
            if (my_event.type == EventType.LeftMouseButton)
            {
                 Entity choosen_one = null;
-         
-                foreach (Entity entity in this.entities)
+
+                foreach (Unit units in this.units)
                 {
-                    entity.is_selected = false;
-                    if (choosen_one == null && entity.IsAtPosition(GameInputs.camera_mouse_pos()))
+                    units.is_selected = false;
+                    if (choosen_one == null && units.IsAtPosition(GameInputs.camera_mouse_pos()))
                     {
-                        if (entity.parent == null ||
-                            (entity.parent.is_fixed && entity.parent.IsAtPosition(GameInputs.mouse_pos())) ||
-                            (entity.parent.is_fixed == false && entity.parent.IsAtPosition(GameInputs.camera_mouse_pos())))
+                        if (units.parent == null ||
+                            (units.parent.is_fixed && units.parent.IsAtPosition(GameInputs.mouse_pos())) ||
+                            (units.parent.is_fixed == false && units.parent.IsAtPosition(GameInputs.camera_mouse_pos())))
                         {
-                            choosen_one = entity;
+                            if (units.team == UnitTeam.Player)
+                            {
+                                choosen_one = units;
+                            }
+                            
+                           
                         }
                     }
+                   
                 }
 
                 if (choosen_one != null)

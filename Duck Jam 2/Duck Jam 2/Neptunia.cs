@@ -45,10 +45,10 @@ namespace Duck_Jam_2
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             ArrayList textures = new ArrayList()
             {
-                "unit",
-                "ore",
-                "food",
-                "home"
+                "player",
+                "opponent",
+                "target",
+                "neutral"
             };
 
             foreach (string name in textures)

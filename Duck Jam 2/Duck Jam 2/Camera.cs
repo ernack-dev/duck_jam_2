@@ -13,7 +13,7 @@ namespace Duck_Jam_2
 		public Camera(Vector2 position)
 		{
 			this.position = position;
-			this.speed = 256.0f;
+			this.speed = 512.0f;
 			velocity = new Vector2();
 		}
 
