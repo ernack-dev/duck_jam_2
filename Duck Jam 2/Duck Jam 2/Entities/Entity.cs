@@ -74,6 +74,12 @@ namespace Duck_Jam_2
 
         }
 
+        public virtual void ShowAsTarget()
+        {
+            this.texture = Assets.Get<Texture2D>("target");
+        }
+        
+
         public virtual Vector2 Center()
         {
             return new Vector2(

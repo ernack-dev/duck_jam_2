@@ -11,10 +11,11 @@ namespace Duck_Jam_2
 		public Vector2 position { get; set; }
 		public Vector2 size { get; set; }
 		public bool is_fixed { get; set; }
+		public bool is_visible { get; set; }
 
 		public Widget( Vector2 position )
 		{ 
-			Init(position, true);
+			Init(position, false);
 		}
 
 		public Widget(Vector2 position, bool is_fixed)
@@ -29,7 +30,7 @@ namespace Duck_Jam_2
 			this.position = position;
 			this.size = new Vector2();
 			this.children = new ArrayList();
-			this.is_fixed = false;
+			this.is_visible = true;
 		}
 
 		public virtual Vector2 AbsolutePosition()
@@ -53,7 +54,10 @@ namespace Duck_Jam_2
         {
 			foreach (Widget child in this.children)
             {
-				child.Draw(batch);
+				if (child.is_visible)
+                {
+					child.Draw(batch);
+				}
             }
         }
 

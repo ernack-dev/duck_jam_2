@@ -28,16 +28,19 @@ namespace Duck_Jam_2
         public bool is_dead { get; set; }
         public bool is_attacking { get; private set; }
         private ProgressBar hp_progress;
+        private ProgressBar reveal_progress;
         private static int Counter = 0;
         
         private float eye_timer;
         private float eye_time;
         private EntityEyes eyes;
 
+        public float revealed { get; private set; }
+
         public Unit(UnitTeam team, Vector2 position, ArrayList entities)
             : base(EntityType.Unit,
                   team == UnitTeam.Player ? "player" : 
-                  (team == UnitTeam.Target ? "target" : 
+                  (team == UnitTeam.Target ? "neutral" : 
                   (team == UnitTeam.Neutral ? "neutral" :
                   "opponent"
                   )),
@@ -60,13 +63,48 @@ namespace Duck_Jam_2
             float hp_height = 8.0f;
             this.hp_progress = new ProgressBar(
                 new Vector2(0, hp_height), 
-                new Vector2(this.size.X, hp_height)
+                new Vector2(this.size.X, hp_height),
+                Color.Red
              );
+
+            this.reveal_progress = new ProgressBar(
+                new Vector2(0, 2 * hp_height),
+                new Vector2(this.size.X, hp_height),
+                Color.Yellow
+             );
+
+            this.revealed = 0.0f;
+
+            this.reveal_progress.SetValue(0.0f);
+
+            if (this.team != UnitTeam.Target && this.team != UnitTeam.Neutral)
+            {
+                this.reveal_progress.is_visible = false;
+            }
 
             this.hp_progress.is_fixed = false;
             this.is_dead = false;
 
             AddChild(this.hp_progress);
+            AddChild(this.reveal_progress);
+        }
+
+        public void Analyse(float dt)
+        {
+            this.revealed += 0.2f * dt;
+          
+            if (this.revealed > 1.0f)
+            {
+                this.revealed = 1.0f;
+                this.reveal_progress.is_visible = false;
+
+                if (this.team == UnitTeam.Target)
+                {
+                    ShowAsTarget();
+                }
+            }
+
+            this.reveal_progress.SetValue(this.revealed);
         }
 
         public void MakeNoise()
@@ -108,7 +146,7 @@ namespace Duck_Jam_2
                 MakeNoise();
             }
 
-            if (
+            if (this.orders.Count > 0 &&
                 this.orders[0].GetType() != typeof(AttackOrder) &&
                 this.team != UnitTeam.Neutral
                )

@@ -10,11 +10,11 @@ namespace Duck_Jam_2
         private Panel bar;
         private float ratio;
         public bool is_visible { get; set; }
-		public ProgressBar(Vector2 position, Vector2 size) : base(position)
+		public ProgressBar(Vector2 position, Vector2 size, Color color) : base(position)
 		{
             this.is_visible = true;
             this.content = new Panel(position.X, position.Y, size.X, size.Y, Color.Black);
-            this.bar = new Panel(position.X, position.Y, size.X, size.Y, Color.Red);
+            this.bar = new Panel(position.X, position.Y, size.X, size.Y, color);
             this.content.is_fixed = false;
             this.bar.is_fixed = false;
             this.ratio = 1.0f;

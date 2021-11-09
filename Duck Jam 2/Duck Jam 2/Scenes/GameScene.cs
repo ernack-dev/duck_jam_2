@@ -30,7 +30,6 @@ namespace Duck_Jam_2
             this.navbar = AddChild(new Panel(0, 0, 12, 1, Color.DarkGray));
             this.navbar.is_fixed = true;
             this.body.is_fixed = true;
-           
 
             Screen.camera.SetCenter(new Vector2(32, 32));
             this.entities.Add(new Unit(UnitTeam.Player, new Vector2(0, 32), entities));
@@ -72,12 +71,15 @@ namespace Duck_Jam_2
             {
                 int x = rand.Next(-1800, 1800);
                 int y = rand.Next(-1800, 1800);
+
                 this.target = new Unit(UnitTeam.Target, new Vector2(x, y), entities);
                 this.target.AddOrder(new WanderOrder(this.target));
                 this.entities.Add(this.target);
 
                 // Spawn body guard
-                for (int j = 0; j < 2; j++)
+                int n_guard = rand.Next(1, 3);
+                
+                for (int j = 0; j < n_guard; j++)
                 {
                     int x0 = rand.Next(-256, 256);
                     int y0 = rand.Next(-256, 256);

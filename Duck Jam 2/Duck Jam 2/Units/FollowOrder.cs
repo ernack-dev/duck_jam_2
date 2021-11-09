@@ -33,7 +33,7 @@ namespace Duck_Jam_2
 			if (dist < near_dist)
             {
 				arrive *= this.target.velocity.Length();
-            }
+			}
 			else if (dist < slow_down_dist)
             {
 				arrive *= this.unit.speed * (dist/slow_down_dist);
@@ -41,6 +41,14 @@ namespace Duck_Jam_2
 			else
             {
 				arrive *= this.unit.speed;
+			}
+
+			if (dist < near_dist || dist < slow_down_dist)
+			{
+				if (this.unit.team == UnitTeam.Player)
+				{
+					this.target.Analyse(dt);
+				}
 			}
 
 			this.transport.Move(arrive + avoid);
