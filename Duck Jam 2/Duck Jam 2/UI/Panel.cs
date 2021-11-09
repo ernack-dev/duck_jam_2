@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,6 +8,7 @@ namespace Duck_Jam_2
 	public class Panel : Widget
 	{
 		private Rect rect;
+		public bool need_change { get; set; }
 
 		public Panel(int x, int y, int w, int h, Color color) 
 			: base(Screen.GridPosition(x, y))
@@ -22,7 +24,39 @@ namespace Duck_Jam_2
 			);
 		}
 
-		public override void Draw(SpriteBatch batch)
+		public Panel(float x, float y, float w, float h, Color color)
+			: base(new Vector2(x, y))
+		{
+			this.size = new Vector2(w, h);
+
+			this.rect = new Rect(
+				(int)this.position.X,
+				(int)this.position.Y,
+				(int)this.size.X,
+				(int)this.size.Y,
+				color
+			);
+		}
+
+        public override void Update(float dt)
+        {
+            base.Update(dt);
+
+			if (this.need_change)
+			{
+				this.need_change = false;
+				this.rect.Position = new Vector2(
+					this.position.X,
+					this.position.Y
+				);
+
+				this.rect.Width = Math.Max(1, (int)this.size.X);
+				this.rect.Height = Math.Max(1, (int)this.size.Y);
+				this.rect.Resize();
+			}
+		}
+
+        public override void Draw(SpriteBatch batch)
 		{
 			if (!this.is_fixed)
 			{

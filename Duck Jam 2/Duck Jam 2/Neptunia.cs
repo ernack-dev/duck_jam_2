@@ -29,8 +29,8 @@ namespace Duck_Jam_2
 
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = (int) (1920 * 3/4.0f);
+            _graphics.PreferredBackBufferHeight = (int) (1080 * 3/4.0f);
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -75,7 +75,15 @@ namespace Duck_Jam_2
             }
             if (Mouse.GetState().RightButton == ButtonState.Pressed && GameInputs.right_mouse_released)
             {
-                this.events.Notify(new Event(EventType.RightMouseButton));
+                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+                {
+                    this.events.Notify(new Event(EventType.ShiftRightMouseButton));
+                }
+                else
+                {
+                    this.events.Notify(new Event(EventType.RightMouseButton));
+                }
+               
                 GameInputs.right_mouse_released = false;
             }
 

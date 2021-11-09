@@ -45,6 +45,7 @@ namespace Duck_Jam_2
                 this.entities.Add(opponent);
             }
 
+
             // Spawn neutrals
             for (int i = 0; i < 64; i++)
             {
@@ -64,6 +65,17 @@ namespace Duck_Jam_2
                 Unit target = new Unit(UnitTeam.Target, new Vector2(x, y), entities);
                 target.AddOrder(new WanderOrder(target));
                 this.entities.Add(target);
+
+                // Spawn body guard
+                for (int j = 0; j < 2; j++)
+                {
+                    int x0 = rand.Next(-256, 256);
+                    int y0 = rand.Next(-256, 256);
+
+                    Unit opponent = new Unit(UnitTeam.Opponent, new Vector2(x0, y0) + target.Center(), entities);
+                    opponent.AddOrder(new FollowOrder(opponent, target));
+                    this.entities.Add(opponent);
+                }
             }
 
             foreach (Unit unit in this.entities)

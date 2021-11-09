@@ -24,9 +24,35 @@ namespace Duck_Jam_2
             );
         }
 
+        public Unit NearAggressiveUnit()
+        { 
+            float dist = 300.0f;
+
+            foreach (Unit u in this.unit.entities)
+            {
+                if (u.is_attacking && (u.position - this.unit.position).Length() <= dist)
+                {
+                    return u;
+                }
+            }
+
+            return null;
+        }
+
         public override void Update(float dt)
         {
             base.Update(dt);
+ 
+            if (this.unit.team == UnitTeam.Opponent)
+            {
+                Unit hostile = NearAggressiveUnit();
+
+                if (hostile != null && hostile.team != UnitTeam.Opponent)
+                {
+                    this.unit.AddPrioOrder(new AttackOrder(this.unit, hostile));
+                    return;
+                }
+            }
 
             Vector2 arrive = this.steering.Arrive(this.destination);
             Vector2 avoid = this.steering.Avoid(this.unit.entities);

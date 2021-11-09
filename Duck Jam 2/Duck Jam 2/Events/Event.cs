@@ -5,7 +5,8 @@ namespace Duck_Jam_2
 	public enum EventType
 	{
 		LeftMouseButton,
-		RightMouseButton
+		RightMouseButton,
+		ShiftRightMouseButton
 	};
 
 	public class Event

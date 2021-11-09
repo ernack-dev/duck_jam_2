@@ -40,6 +40,8 @@ namespace Duck_Jam_2
 
         public override void Draw(SpriteBatch batch)
         {
+            base.Draw(batch);
+            
             if (this.is_fixed)
             {
                 batch.Draw(this.texture, this.position, Color.White);
