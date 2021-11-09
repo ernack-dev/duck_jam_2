@@ -42,7 +42,7 @@ namespace Duck_Jam_2
         public override void Update(float dt)
         {
             base.Update(dt);
- 
+            this.unit.SetMouth(EntityMouth.Neutral);
             if (this.unit.team == UnitTeam.Opponent)
             {
                 Unit hostile = NearAggressiveUnit();
@@ -50,6 +50,7 @@ namespace Duck_Jam_2
                 if (hostile != null && hostile.team != UnitTeam.Opponent)
                 {
                     this.unit.AddPrioOrder(new AttackOrder(this.unit, hostile));
+                    this.unit.SetMouth(EntityMouth.Fear);
                     return;
                 }
             }

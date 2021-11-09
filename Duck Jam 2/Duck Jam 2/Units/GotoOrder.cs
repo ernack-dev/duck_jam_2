@@ -39,7 +39,7 @@ namespace Duck_Jam_2
 			Vector2 arrive = (
 				this.steering.Arrive(this.position)
 			);
-
+			
 			Vector2 avoid = this.steering.Avoid(this.unit.entities);
 
 			if (

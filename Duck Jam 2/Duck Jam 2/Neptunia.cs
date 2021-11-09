@@ -54,7 +54,14 @@ namespace Duck_Jam_2
                 "player",
                 "opponent",
                 "target",
-                "neutral"
+                "neutral",
+                "close_eyes",
+                "dead_eyes",
+                "open_eyes",
+                "mouth_fear",
+                "mouth_happy",
+                "mouth_neutral",
+                "mouth_sad"
             };
 
             foreach (string name in textures)

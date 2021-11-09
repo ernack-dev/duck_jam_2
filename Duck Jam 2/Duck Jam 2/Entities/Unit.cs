@@ -30,6 +30,10 @@ namespace Duck_Jam_2
         private ProgressBar hp_progress;
         private static int Counter = 0;
         
+        private float eye_timer;
+        private float eye_time;
+        private EntityEyes eyes;
+
         public Unit(UnitTeam team, Vector2 position, ArrayList entities)
             : base(EntityType.Unit,
                   team == UnitTeam.Player ? "player" : 
@@ -39,6 +43,7 @@ namespace Duck_Jam_2
                   )),
               position)
         {
+            this.eyes = EntityEyes.Close;
             this.atk = 16.0f;
             this.team = team;
             this.entities = entities;
@@ -49,7 +54,7 @@ namespace Duck_Jam_2
             this.transport = new UnitTransportLayer(this);
             this.steering = new UnitSteeringLayer(this);
             this.name = "Unit_" + Unit.Counter.ToString() + "_" + this.team.ToString();
-            
+            this.eye_time = 0.0f;
             Unit.Counter++;
 
             float hp_height = 8.0f;
@@ -81,9 +86,9 @@ namespace Duck_Jam_2
                 if (dist2 >= min_dist2 && dist2 <= max_dist2)
                 {
                    Random rand = new Random();
-
+                   unit.SetMouth(EntityMouth.Fear);
                    unit.AddPrioOrder(new GotoOrder(unit, unit.position));
-                    unit.AddPrioOrder(new IdleOrder(unit, (float) rand.Next(2, 5)));
+                   unit.AddPrioOrder(new IdleOrder(unit, (float) rand.Next(2, 5)));
                    unit.AddPrioOrder(new GotoOrder(unit, this.position, Screen.Width()/4));
                 }
             }
@@ -94,7 +99,7 @@ namespace Duck_Jam_2
             if (this.is_dead) { return; }
 
             this.hp -= damages;
-            
+            SetMouth(EntityMouth.Sad);
             if (this.hp <= 0)
             {
                 this.is_dead = true;
@@ -180,7 +185,28 @@ namespace Duck_Jam_2
         {
             this.is_attacking = false;
 
-            if (this.is_dead) { this.orders.Clear();  return; }
+            if (this.is_dead) { this.orders.Clear(); SetEyes(EntityEyes.Dead); return; }
+
+            if (this.eye_timer > this.eye_time)
+            {
+                if (this.eyes == EntityEyes.Open)
+                {
+                    SetEyes(EntityEyes.Close);
+                    this.eyes = EntityEyes.Close;
+                    this.eye_time = 0.3f;
+                }
+                else
+                {
+                    Random rand = new Random();
+                    SetEyes(EntityEyes.Open);
+                    this.eyes = EntityEyes.Open;
+                    this.eye_time = (float)rand.Next(2, 4);
+                }
+                
+                this.eye_timer = 0.0f;
+            }
+
+            this.eye_timer += dt;
 
             base.Update(dt);
             
