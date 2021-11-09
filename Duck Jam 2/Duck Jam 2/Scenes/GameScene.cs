@@ -13,7 +13,6 @@ namespace Duck_Jam_2
         private ArrayList entities;
         private ArrayList players;
         private Widget body;
-        private Footer footer;
         private Widget navbar;
         private int previous_player;
         private Unit target;
@@ -25,13 +24,13 @@ namespace Duck_Jam_2
             this.entities = new ArrayList();
             this.players = new ArrayList();
             this.previous_player = 0;
-            this.body =  AddChild(new Panel(0, 1, 12, 7, Color.Green));
-            this.navbar = AddChild(new Panel(0, 0, 12, 1, Color.Blue));
-            this.footer = (Footer) AddChild(new Footer());
-    
+            
+            
+            this.body = AddChild(new Panel(0, 1, 12, 11, Color.Green));
+            this.navbar = AddChild(new Panel(0, 0, 12, 1, Color.DarkGray));
             this.navbar.is_fixed = true;
             this.body.is_fixed = true;
-            this.footer.is_fixed = true;
+           
 
             Screen.camera.SetCenter(new Vector2(32, 32));
             this.entities.Add(new Unit(UnitTeam.Player, new Vector2(0, 32), entities));
@@ -148,7 +147,7 @@ namespace Duck_Jam_2
                 if (choosen_one != null)
                 {
                     choosen_one.is_selected = true;
-                    this.footer.ChangeText(choosen_one.name);
+                    
                 }
                 else
                 {
