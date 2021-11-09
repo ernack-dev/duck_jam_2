@@ -9,6 +9,7 @@ namespace Duck_Jam_2
 		public Vector2 position { get; set; }
 		private Vector2 velocity;
 		private float speed;
+		public Entity target { get; set; }
 
 		public Camera(Vector2 position)
 		{
@@ -19,6 +20,11 @@ namespace Duck_Jam_2
 
 		public void Update(float dt)
         {
+			if (this.target != null)
+            {
+				SetCenter(this.target.Center());
+			}
+			
 			this.position += this.velocity * dt;
         }
 

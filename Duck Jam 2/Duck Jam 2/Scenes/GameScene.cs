@@ -8,17 +8,23 @@ namespace Duck_Jam_2
 {
     public class GameScene : Widget, EventObserver, Scene
     {
+        private Neptunia game;
         private ArrayList units;
         private ArrayList entities;
+        private ArrayList players;
         private Widget body;
         private Footer footer;
         private Widget navbar;
+        private int previous_player;
+        private Unit target;
 
-        public GameScene(EventObservable observable): base(new Vector2(0, 0))
+        public GameScene(Neptunia game, EventObservable observable): base(new Vector2(0, 0))
         {
+            this.game = game;
             this.units = new ArrayList();
             this.entities = new ArrayList();
-
+            this.players = new ArrayList();
+            this.previous_player = 0;
             this.body =  AddChild(new Panel(0, 1, 12, 7, Color.Green));
             this.navbar = AddChild(new Panel(0, 0, 12, 1, Color.Blue));
             this.footer = (Footer) AddChild(new Footer());
@@ -31,6 +37,11 @@ namespace Duck_Jam_2
             this.entities.Add(new Unit(UnitTeam.Player, new Vector2(0, 32), entities));
             this.entities.Add(new Unit(UnitTeam.Player, new Vector2(32, 32), entities));
             this.entities.Add(new Unit(UnitTeam.Player, new Vector2(64, 32), entities));
+
+            foreach (Unit unit in this.entities)
+            {
+                this.players.Add(unit);
+            }
 
             Random rand = new Random();
 
@@ -62,9 +73,9 @@ namespace Duck_Jam_2
             {
                 int x = rand.Next(-1800, 1800);
                 int y = rand.Next(-1800, 1800);
-                Unit target = new Unit(UnitTeam.Target, new Vector2(x, y), entities);
-                target.AddOrder(new WanderOrder(target));
-                this.entities.Add(target);
+                this.target = new Unit(UnitTeam.Target, new Vector2(x, y), entities);
+                this.target.AddOrder(new WanderOrder(this.target));
+                this.entities.Add(this.target);
 
                 // Spawn body guard
                 for (int j = 0; j < 2; j++)
@@ -96,6 +107,20 @@ namespace Duck_Jam_2
 
         void EventObserver.OnEvent(Event my_event)
         {
+            if (my_event.type == EventType.SpaceBar)
+            {
+                int next = this.previous_player + 1;
+
+                if (next >= this.players.Count) { next = 0; }
+                Unit unit = (Unit)this.players[next];
+
+                foreach (Unit units in this.units) { units.is_selected = false; }
+
+                unit.is_selected = true;
+                Screen.camera.target = unit;
+                this.previous_player = next;
+            }
+
            if (my_event.type == EventType.LeftMouseButton)
            {
                 Entity choosen_one = null;
@@ -125,11 +150,19 @@ namespace Duck_Jam_2
                     choosen_one.is_selected = true;
                     this.footer.ChangeText(choosen_one.name);
                 }
+                else
+                {
+                    Screen.camera.target = null;
+                }
            }
         }
 
         public override void Update(float dt)
         {
+            if (this.target != null && this.target.is_dead)
+            {
+                this.game.ChangeScene(new EndScene(this.game));
+            }
 
             Vector2 mouse = GameInputs.mouse_pos();
             Vector2 campos = new Vector2();

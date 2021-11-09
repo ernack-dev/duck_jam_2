@@ -17,7 +17,6 @@ namespace Duck_Jam_2
         private Scene current_scene;
         private NeptuniaEvent events;
         
-
         public Neptunia()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -36,7 +35,14 @@ namespace Duck_Jam_2
             base.Initialize();
             Screen.device = GraphicsDevice;
             this.events = new NeptuniaEvent();
-            this.current_scene = new GameScene(this.events);
+            this.current_scene = new GameScene(this, this.events);
+            this.events.AddObserver(this.current_scene);
+        }
+
+        public void ChangeScene(Scene next)
+        {
+            this.events = new NeptuniaEvent();
+            this.current_scene = next;
             this.events.AddObserver(this.current_scene);
         }
 
@@ -59,6 +65,19 @@ namespace Duck_Jam_2
             Assets.Add("main_font", Content.Load<SpriteFont>("main_font"));
         }
 
+        private void KeyReleased(Keys key, EventType event_type)
+        {
+            if (Keyboard.GetState().IsKeyDown(key) && GameInputs.keypress != key)
+            {
+                this.events.Notify(new Event(event_type));
+                GameInputs.keypress = key;
+            }
+
+            if (Keyboard.GetState().IsKeyUp(key) && GameInputs.keypress == key)
+            {
+                GameInputs.keypress = Keys.None;
+            }
+        }
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -66,7 +85,9 @@ namespace Duck_Jam_2
 
             
             GameInputs.mouse_x = Mouse.GetState().X;
-            GameInputs.mouse_y = Mouse.GetState().Y; 
+            GameInputs.mouse_y = Mouse.GetState().Y;
+
+            KeyReleased(Keys.Space, EventType.SpaceBar);
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed && GameInputs.left_mouse_released)
             {

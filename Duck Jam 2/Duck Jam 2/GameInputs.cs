@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Duck_Jam_2
 {
@@ -9,6 +10,7 @@ namespace Duck_Jam_2
 		public static int mouse_y = 0;
 		public static bool left_mouse_released = true;
 		public static bool right_mouse_released = true;
+		public static Keys keypress = Keys.None;
 
 		public static Vector2 mouse_pos()
 		{

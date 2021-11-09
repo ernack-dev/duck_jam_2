@@ -6,7 +6,8 @@ namespace Duck_Jam_2
 	{
 		LeftMouseButton,
 		RightMouseButton,
-		ShiftRightMouseButton
+		ShiftRightMouseButton,
+		SpaceBar
 	};
 
 	public class Event

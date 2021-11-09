@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System;
 using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -63,6 +64,31 @@ namespace Duck_Jam_2
             AddChild(this.hp_progress);
         }
 
+        public void MakeNoise()
+        {
+            float min_dist = (float)Screen.Width() / 2;
+            float max_dist = (float) Screen.Width();
+
+            float min_dist2 = min_dist * min_dist;
+            float max_dist2 = max_dist * max_dist;
+
+            foreach (Unit unit in this.entities)
+            {
+                if (unit == this || unit.team == UnitTeam.Player) { continue;  }
+
+                float dist2 = (this.position - unit.position).LengthSquared();
+
+                if (dist2 >= min_dist2 && dist2 <= max_dist2)
+                {
+                   Random rand = new Random();
+
+                   unit.AddPrioOrder(new GotoOrder(unit, unit.position));
+                    unit.AddPrioOrder(new IdleOrder(unit, (float) rand.Next(2, 5)));
+                   unit.AddPrioOrder(new GotoOrder(unit, this.position, Screen.Width()/4));
+                }
+            }
+        }
+
         public void hurt(Unit origin, float damages)
         {
             if (this.is_dead) { return; }
@@ -74,6 +100,7 @@ namespace Duck_Jam_2
                 this.is_dead = true;
                 this.hp_progress.is_visible = false;
                 this.hp = 0;
+                MakeNoise();
             }
 
             if (
@@ -96,13 +123,18 @@ namespace Duck_Jam_2
         {
             if (this.is_dead) { return; }
 
-            if (my_event.type == EventType.ShiftRightMouseButton && this.is_selected)
+            if (my_event.type == EventType.RightMouseButton &&
+                this.is_selected && IsAtPosition(GameInputs.camera_mouse_pos()))
+            {
+                MakeNoise();
+            }
+            else if (my_event.type == EventType.ShiftRightMouseButton && this.is_selected)
             {
                 this.orders.Clear();
 
                 foreach (Unit unit in this.entities)
                 {
-                    if (unit.IsAtPosition(GameInputs.camera_mouse_pos()))
+                    if (unit != this && unit.IsAtPosition(GameInputs.camera_mouse_pos()))
                     {
                         AddOrder(new AttackOrder(this, unit));
                         break;
@@ -116,7 +148,7 @@ namespace Duck_Jam_2
 
                 foreach (Unit unit in this.entities)
                 {
-                    if (unit.IsAtPosition(GameInputs.camera_mouse_pos()))
+                    if (unit != this && unit.IsAtPosition(GameInputs.camera_mouse_pos()))
                     {
                         AddOrder(new FollowOrder(this, unit));
                         break;

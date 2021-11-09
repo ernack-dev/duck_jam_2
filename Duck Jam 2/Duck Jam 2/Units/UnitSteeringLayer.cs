@@ -22,6 +22,11 @@ namespace Duck_Jam_2
 
 			foreach (Entity other in others)
 			{ 
+				if (other.GetType() == typeof(Unit) && ((Unit)other).is_dead)
+                {
+					continue;
+                }
+
 				if (other != this.unit && (other.Center() - this.unit.Center()).Length() <= 64.0f)
 				{
 					Vector2 dist = other.position - this.unit.position + this.unit.velocity * this.unit.speed;

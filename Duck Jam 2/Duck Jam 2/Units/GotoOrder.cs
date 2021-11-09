@@ -8,10 +8,22 @@ namespace Duck_Jam_2
 		private UnitSteeringLayer steering;
 		private UnitTransportLayer transport;
 		Vector2 position;
+		float distance;
+
+		public GotoOrder(Unit unit, Vector2 position, float distance) : base(unit)
+		{
+			Init(unit, position, distance);
+		}
 
 		public GotoOrder(Unit unit, Vector2 position) : base(unit)
 		{
+			Init(unit, position, 0.0f);
+		}
+
+		private void Init(Unit unit, Vector2 position, float distance)
+        {
 			this.position = position;
+			this.distance = distance;
 			this.transport = new UnitTransportLayer(unit);
 			this.steering = new UnitSteeringLayer(unit);
 		}
@@ -30,7 +42,10 @@ namespace Duck_Jam_2
 
 			Vector2 avoid = this.steering.Avoid(this.unit.entities);
 
-			if (arrive.LengthSquared() == 0)
+			if (
+				arrive.LengthSquared() <= 0 ||
+				(this.unit.position - this.position).LengthSquared() < this.distance * this.distance
+			)
 			{ 
 				this.is_done = true;
 				return;
